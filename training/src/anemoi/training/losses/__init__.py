@@ -10,6 +10,7 @@
 from .combined import CombinedLoss
 from .huber import HuberLoss
 from .kcrps import AlmostFairKernelCRPS
+from .dct import DCTLoss
 from .kcrps import KernelCRPS
 from .logcosh import LogCoshLoss
 from .loss import get_loss_function
@@ -23,6 +24,7 @@ __all__ = [
     "CombinedLoss",
     "HuberLoss",
     "KernelCRPS",
+    "DCTLoss",
     "LogCoshLoss",
     "MAELoss",
     "MSELoss",
