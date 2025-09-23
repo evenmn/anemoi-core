@@ -96,7 +96,7 @@ class DCTLoss(BaseLoss):
         k_nyq_radial = min(fx_nyq, fy_nyq)  # circular limit
         k_cut = float(cutoff_ratio) * k_nyq_radial
 
-        mask = (k <= k_cut)
+        mask = torch.where(k < k_cut, 1.0 - 2.0 * k, 0.0)
 
         # Align to shifted spectrum if requested
         if shifted:
