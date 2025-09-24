@@ -17,9 +17,11 @@ from .mae import MAELoss
 from .mse import MSELoss
 from .rmse import RMSELoss
 from .weighted_mse import WeightedMSELoss
+from .avgpool2d import AvgPool2dLoss
 
 __all__ = [
     "AlmostFairKernelCRPS",
+    "AvgPool2dLoss",
     "CombinedLoss",
     "HuberLoss",
     "KernelCRPS",
