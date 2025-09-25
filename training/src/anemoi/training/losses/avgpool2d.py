@@ -100,8 +100,8 @@ class AvgPool2dLoss(KernelCRPS):
 
         y_pred_regional = y_pred[:, :, :self.len_reg]
         y_target_regional = y_target[:, :self.len_reg].unsqueeze(1)
-        print("pred shape:", y_pred_regional.shape)
-        print("target shape:", y_target_regional.shape)
+#        print("pred shape:", y_pred_regional.shape)
+#        print("target shape:", y_target_regional.shape)
 
         y_pred_regional = self._prepare_for_transform(
             y_pred_regional, 
