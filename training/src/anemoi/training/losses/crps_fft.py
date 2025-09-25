@@ -129,8 +129,8 @@ class CRPSFFTLoss(KernelCRPS):
         )
 
         mask = einops.rearrange(
-                self.mask.to(preds.device)
-                "y x -> (y x)"
+                self.mask.to(preds.device),
+                "y x -> (y x)",
         )
         mask = mask[None, None]
 
@@ -178,19 +178,10 @@ class CRPSFFTLoss(KernelCRPS):
 
         #torch.save(log_diff, "/leonardo/home/userexternal/enordhag/log_diff.pt")
 
-        kcrps_ = einops.rearrange(
-                kcrps_, 
-                "(bs v) e y x -> bs e (y x) v",
-                bs=bs_,
-        )
+        kcrps_ = einops.rearrange(kcrps_, "bs v latlon -> bs 1 latlon v")
         scaled = self.scale(kcrps_, scaler_indices, without_scalers=without_scalers)
-
-        # divide by (weighted point count) * (batch size)
-        if squash:
-            return scaled.mean() / bs_
-
-        loss = scaled.mean(dim=0) / bs_
-        return loss.mean(dim=0)
+        print("FFT loss:", scaled.mean())
+        return scaled.mean() #self.reduce(kcrps_, squash=squash, squash_mode="avg", group=None)
 
     @property
     def name(self) -> str:

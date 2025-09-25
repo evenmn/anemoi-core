@@ -96,7 +96,7 @@ class DCTLoss(BaseLoss):
         k_nyq_radial = min(fx_nyq, fy_nyq)  # circular limit
         k_cut = float(cutoff_ratio) * k_nyq_radial
 
-        mask = torch.where(k < k_cut, 1.0 - 2.0 * k, 0.0)
+        mask = torch.where(k < k_cut, 1.0 - 2 * k, 0)
 
         # Align to shifted spectrum if requested
         if shifted:
@@ -170,6 +170,8 @@ class DCTLoss(BaseLoss):
                 log_diff = self._discrete_transform(y_pred_regional, y_target_regional)
         else:
             log_diff = self._discrete_transform(y_pred_regional, y_target_regional)
+
+        torch.save(log_diff, "/leonardo/home/userexternal/enordhag/log_diff.pt")
 
         log_diff = einops.rearrange(
                 log_diff, 
