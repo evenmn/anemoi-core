@@ -97,10 +97,7 @@ class CRPSFFTLoss(KernelCRPS):
         if shifted:
             mask = torch.fft.fftshift(mask, dim=(-2, -1))
 
-        mask = einops.rearrange(
-                self.mask.to(preds.device),
-                "x y -> 1 1 (y x)",
-        )
+        mask = einops.rearrange(mask, "x y -> 1 1 (y x)")
         return mask
 
     def _discrete_transform(self, preds: torch.Tensor, targets: torch.Tensor, batch_size: int) -> torch.Tensor:
