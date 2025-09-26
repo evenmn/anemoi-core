@@ -97,9 +97,13 @@ class CRPSFFTLoss(KernelCRPS):
         if shifted:
             mask = torch.fft.fftshift(mask, dim=(-2, -1))
 
-        return mask.T
+        mask = einops.rearrange(
+                self.mask.to(preds.device),
+                "x y -> 1 1 (y x)",
+        )
+        return mask
 
-    def _discrete_transform(self, preds: torch.Tensor, targets: torch.Tensor, bs: int) -> torch.Tensor:
+    def _discrete_transform(self, preds: torch.Tensor, targets: torch.Tensor, batch_size: int) -> torch.Tensor:
         """
         Perform the discrete Fourier/cosine transform of preds and targets and return log-diff.
 
@@ -108,10 +112,8 @@ class CRPSFFTLoss(KernelCRPS):
                 Predictions, (bs*var, ens, y, x)
             targets: torch.Tensor
                 Targets, (bs*var, y, x)
-            one_member: bool
-                Restrict loss computation to one member to save compute and memory, False by default
-            eps: float
-                Add this (small) value to avoid zero division, 1e-8 by default
+            batch_size: int
+                Self-explanatory
         """
 
         preds_spectral = self.transform(preds)
@@ -120,22 +122,21 @@ class CRPSFFTLoss(KernelCRPS):
         preds_spectral = einops.rearrange(
                 preds_spectral,
                 "(bs v) e y x -> bs v (y x) e",
-                bs=bs,
+                bs=batch_size,
         )
         targets_spectral = einops.rearrange(
                 targets_spectral,
                 "(bs v) y x -> bs v (y x)",
-                bs=bs,
+                bs=batch_size,
         )
 
-        mask = einops.rearrange(
-                self.mask.to(preds.device),
-                "y x -> (y x)",
-        )
-        mask = mask[None, None]
+        #mask = einops.rearrange(
+        #        self.mask.to(preds.device),
+        #        "y x -> 1 1 (y x)",
+        #)
 
         kcrps_ = self._kernel_crps(preds_spectral, targets_spectral)
-        return kcrps_ * mask
+        return kcrps_ * mask.to(preds.device)
 
 
     def forward(
