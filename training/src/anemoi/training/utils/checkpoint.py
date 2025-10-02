@@ -157,7 +157,6 @@ def change_num_processor_chunks(state_dict: OrderedDict, old_num_chunks: int, ne
             chunk = int(key.split(".proc.")[1].split(".")[0])
             block = int(key.split(".blocks.")[1].split(".")[0])
             new_chunk, new_block = remap_block(chunk, block, old_num_chunks, new_num_chunks, num_layers)
-            print("chunk, block -> new_chunk, new_block", chunk, block, "->", new_chunk, new_block)
             new_key = key.replace(f".proc.{chunk}.", f".proc.{new_chunk}.").replace(f".blocks.{block}.", f".blocks.{new_block}.")
             _state_dict[new_key] = state_dict[key]
     
