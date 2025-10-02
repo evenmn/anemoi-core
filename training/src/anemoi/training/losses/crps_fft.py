@@ -133,7 +133,7 @@ class CRPSFFTLoss(KernelCRPS):
         #)
 
         kcrps_ = self._kernel_crps(preds_spectral, targets_spectral)
-        return kcrps_ * mask.to(preds.device)
+        return kcrps_ * self.mask.to(preds.device)
 
 
     def forward(
@@ -170,9 +170,9 @@ class CRPSFFTLoss(KernelCRPS):
 
         if self.no_autocast:
             with torch.amp.autocast(device_type="cuda", enabled=False):
-                kcrps_ = self._discrete_transform(y_pred_regional, y_target_regional, bs=bs_)
+                kcrps_ = self._discrete_transform(y_pred_regional, y_target_regional, bs_)
         else:
-            kcrps_ = self._discrete_transform(y_pred_regional, y_target_regional, bs=bs_)
+            kcrps_ = self._discrete_transform(y_pred_regional, y_target_regional, bs_)
 
         #torch.save(log_diff, "/leonardo/home/userexternal/enordhag/log_diff.pt")
 
