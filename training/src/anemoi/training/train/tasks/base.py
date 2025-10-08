@@ -213,7 +213,7 @@ class BaseGraphModule(pl.LightningModule, ABC):
             scalers=self.scalers,
             data_indices=self.data_indices,
         )
-        print_variable_scaling(self.loss, data_indices)
+        #print_variable_scaling(self.loss, data_indices)
 
         self.metrics = torch.nn.ModuleDict(
             {

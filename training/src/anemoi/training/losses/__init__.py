@@ -15,8 +15,11 @@ from .logcosh import LogCoshLoss
 from .loss import get_loss_function
 from .mae import MAELoss
 from .mse import MSELoss
+from .dct import DCTLoss
 from .rmse import RMSELoss
-from .weighted_mse import WeightedMSELoss
+from .crps_fft import CRPSFFTLoss
+from .afcrps_fft import AFCRPSFFTLoss
+
 
 __all__ = [
     "AlmostFairKernelCRPS",
@@ -26,7 +29,9 @@ __all__ = [
     "LogCoshLoss",
     "MAELoss",
     "MSELoss",
+    "DCTLoss",
     "RMSELoss",
-    "WeightedMSELoss",
+    "CRPSFFTLoss",
+    "AFCRPSFFTLoss",
     "get_loss_function",
 ]
