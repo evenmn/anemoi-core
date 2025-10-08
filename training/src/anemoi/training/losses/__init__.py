@@ -18,6 +18,8 @@ from .mse import MSELoss
 from .dct import DCTLoss
 from .rmse import RMSELoss
 from .crps_fft import CRPSFFTLoss
+from .afcrps_fft import AFCRPSFFTLoss
+
 
 __all__ = [
     "AlmostFairKernelCRPS",
@@ -30,5 +32,6 @@ __all__ = [
     "DCTLoss",
     "RMSELoss",
     "CRPSFFTLoss",
+    "AFCRPSFFTLoss",
     "get_loss_function",
 ]
