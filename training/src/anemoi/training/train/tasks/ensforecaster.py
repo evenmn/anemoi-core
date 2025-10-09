@@ -194,10 +194,29 @@ class GraphEnsForecaster(BaseGraphModule):
             mgroup=ens_comm_subgroup,
         )
 
-        # compute the loss
-        loss_inc = loss(y_pred_ens, y, squash=True, grid_shard_slice=self.grid_shard_slice, group=model_comm_group)
+        # Add in wind speed, calculate cos and sin of wind direction
+        u_pred = y_pred_ens[..., self.data_indices.model.output.name_to_index["10u"]]
+        v_pred = y_pred_ens[..., self.data_indices.model.output.name_to_index["10v"]]
+        ws_pred = torch.sqrt(u_pred**2 + v_pred**2)
 
-        return loss_inc, y_pred_ens if return_pred_ens else None
+        y_pred_ens_mod = y_pred_ens.clone()
+        y_pred_ens_mod[..., self.data_indices.model.output.name_to_index["10u"]] = u_pred / (ws_pred + 1e-6)
+        y_pred_ens_mod[..., self.data_indices.model.output.name_to_index["10v"]] = v_pred / (ws_pred + 1e-6)
+        y_pred_ens_mod = torch.cat([y_pred_ens_mod, ws_pred.unsqueeze(-1)], dim=-1)
+
+
+        u_tar = y[..., self.data_indices.model.output.name_to_index["10u"]]
+        v_tar = y[..., self.data_indices.model.output.name_to_index["10v"]]
+        ws_tar = torch.sqrt(u_tar**2 + v_tar**2)
+        y_mod = y.clone()
+        y_mod[..., self.data_indices.model.output.name_to_index["10u"]] = u_tar / (ws_tar + 1e-6)
+        y_mod[..., self.data_indices.model.output.name_to_index["10v"]] = v_tar / (ws_tar + 1e-6)
+        y_mod = torch.cat([y_mod, ws_tar.unsqueeze(-1)], dim=-1)
+
+        # compute the loss
+        loss_inc = loss(y_pred_ens_mod, y_mod, squash=True, grid_shard_slice=self.grid_shard_slice, group=model_comm_group)
+        # TODO: copy y_pred_ens that is passed to loss to avoid shape error?
+        return loss_inc, y_pred_ens
 
     def advance_input(
         self,

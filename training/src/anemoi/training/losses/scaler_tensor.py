@@ -574,7 +574,7 @@ class ScaleTensor(nn.Module):
 
             if subset_indices is not None:
                 reshaped_scaler = reshaped_scaler[subset_indices]
-
+         
             out = out * reshaped_scaler
 
         return out

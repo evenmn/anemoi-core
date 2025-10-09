@@ -178,7 +178,7 @@ class CRPSFFTLoss(KernelCRPS):
 
         kcrps_ = einops.rearrange(kcrps_, "bs v latlon -> bs 1 latlon v")
         scaled = self.scale(kcrps_, scaler_indices, without_scalers=without_scalers)
-        print("FFT loss:", scaled.mean())
+#        print("FFT loss:", scaled.mean())
         return scaled.mean() #self.reduce(kcrps_, squash=squash, squash_mode="avg", group=None)
 
     @property

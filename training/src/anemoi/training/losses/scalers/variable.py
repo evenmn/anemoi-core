@@ -85,7 +85,7 @@ class GeneralVariableLossScaler(BaseVariableLossScaler):
 
         Retrieve the loss scaling for each variable from the config file.
         """
-        variable_loss_scaling = torch.empty((len(self.data_indices.data.output.full),), dtype=torch.float32)
+        variable_loss_scaling = torch.empty((len(self.data_indices.data.output.full) + 1,), dtype=torch.float32)
 
         for variable_name, idx in self.data_indices.model.output.name_to_index.items():
             _, variable_ref, _ = self.variable_metadata_extractor.get_group_and_level(variable_name)
@@ -104,4 +104,5 @@ class GeneralVariableLossScaler(BaseVariableLossScaler):
                     is None
                 ), f"Variable {variable_name} is not allowed to have a separate scaling besides {variable_ref}."
 
+        variable_loss_scaling[-1] = 1.0
         return variable_loss_scaling
