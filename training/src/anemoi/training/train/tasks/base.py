@@ -754,10 +754,13 @@ class BaseGraphModule(pl.LightningModule, ABC):
         try:
             optimizer_cls = getattr(torch.optim, class_name)
         except AttributeError:
-            raise ValueError(
-                f"Optimizer '{class_name}' not found in torch.optim. "
-                f"Available optimizers: {dir(torch.optim)}"
-            )
+            if class_name == "AdEMAMix":
+                optimizer_cls = AdEMAMix
+            else:
+                raise ValueError(
+                    f"Optimizer '{class_name}' not found in torch.optim. "
+                    f"Available optimizers: {dir(torch.optim)}"
+                )
 
         params = filter(lambda p: p.requires_grad, self.parameters())
 
@@ -770,7 +773,7 @@ class BaseGraphModule(pl.LightningModule, ABC):
                 **kwargs,
             )
         else:
-            optimizer = optimizer_cls(params,lr=self.lr, **kwargs)
+            optimizer = optimizer_cls(params, lr=self.lr, **kwargs)
 
         return optimizer
     
