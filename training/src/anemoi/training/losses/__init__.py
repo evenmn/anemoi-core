@@ -11,6 +11,11 @@ from .combined import CombinedLoss
 from .huber import HuberLoss
 from .kcrps import AlmostFairKernelCRPS
 from .kcrps import KernelCRPS
+#from .dct import DCTLoss
+#from .crps_fft import CRPSFFTLoss
+#from .crps_fftw import CRPSFFTWLoss
+#from .crps_wavelet import CRPSWaveletLoss
+from .crps_wave2 import CRPSWaveletLoss2
 from .logcosh import LogCoshLoss
 from .loss import get_loss_function
 from .mae import MAELoss
@@ -23,6 +28,11 @@ __all__ = [
     "CombinedLoss",
     "HuberLoss",
     "KernelCRPS",
+#    "DCTLoss",
+ #   "CRPSFFTLoss",
+ #   "CRPSFFTWLoss",
+ #   "CRPSWaveletLoss",
+    "CRPSWaveletLoss2",
     "LogCoshLoss",
     "MAELoss",
     "MSELoss",
