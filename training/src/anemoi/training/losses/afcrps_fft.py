@@ -55,7 +55,7 @@ class AFCRPSFFTLoss(AlmostFairKernelCRPS):
         self.ydim = ydim
         self.len_reg = xdim * ydim
         self.transform = torch.fft.fft2
-        self.mask = self.lowpass_mask_2d(xdim, ydim)
+        #self.mask = self.lowpass_mask_2d(xdim, ydim)
         self.no_autocast = no_autocast
 
     @staticmethod
@@ -110,7 +110,7 @@ class AFCRPSFFTLoss(AlmostFairKernelCRPS):
         )
 
         kcrps_ = self._kernel_crps(preds_spectral, targets_spectral, self.alpha)
-        return kcrps_ * self.mask.to(preds.device)
+        return kcrps_ #* self.mask.to(preds.device)
 
 
     def forward(
